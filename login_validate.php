@@ -6,7 +6,6 @@ $pwd=$_POST["pwd"];
 //echo $uid."--".$pwd;
 $sql = "SELECT role FROM tbl_login where uid='".$uid."' and pwd='".$pwd."'";
 //echo $sql;
-		 
          $result = $mysqli->query($sql);
            
          if ($result->num_rows > 0) {
