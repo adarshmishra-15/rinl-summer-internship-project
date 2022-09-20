@@ -6,9 +6,8 @@
     <?php
 session_start();
 session_unset();
-header("Location: login.php");
+header("location:index.php");
 ?>
-    <!-- <meta http-equiv='refresh' content='0; URL=/rinl/login.php'> -->
 </head>
 
 </html>

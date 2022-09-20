@@ -2,60 +2,34 @@
 <html>
 
 <head>
-    <?php include "header_include.php"; ?>
-    <?php session_start();
-if (isset($_SESSION["uid"]) == '')
-    print('<script>location.href="login.php"</script>');
+    <?php 
+    include "assets/helpers/header_include.php";
+    include "assets/helpers/checkuser.php";
+    include "assets/helpers/insertdata.php";
+    
+    $url = "https://chart.googleapis.com/chart?cht=qr&chs={$width}x{$height}&chl={$data}";
 ?>
+    
 </head>
 
 <body>
-    <?php
-$conn = mysqli_connect('localhost', 'root', '', 'db_admin');
-
-// Check connection
-if ($conn === false) {
-    die('ERROR: Could not connect. ' . mysqli_connect_error());
-}
-
-$target_dir = "assets/images/";
-$target_dir = $target_dir . basename($_FILES["uploadfile"]["name"]);
-
-if (move_uploaded_file($_FILES['uploadfile']['tmp_name'], $target_dir)) {
-// echo "File uploaded successfully!";
-}
-else {
-    echo "Sorry, file not uploaded, please try again!";
-}
-
-// Taking all 6 values from the form data(input)    
-$m_name = $_REQUEST['m_name'];
-$m_uid = $_REQUEST['m_uid'];
-$m_long = $_REQUEST['m_long'];
-$m_lat = $_REQUEST['m_lat'];
-$m_desc = $_REQUEST['m_desc'];
-$m_image = $_FILES["uploadfile"]["name"];
-// Performing insert query execution
-
-
-// here our table name is add_machine
-$sql = "INSERT INTO add_machine VALUES ('$m_name', '$m_uid',
-    '$m_long','$m_lat','$m_desc', '$m_image')";
-?>
     <div class="container-scroller">
+    <?php include "assets/helpers/sidebar.php"; ?>
         <div class="main-panel">
             <div class="content-wrapper">
                 <div class="row">
                     <br><br><br>
-                    <div class="col-md-4"></div>
+                    <div class="col-md-4">
+
+                    </div>
                     <div class="col-md-4"">
-          <?php if (mysqli_query($conn, $sql)): ?>
-            <center>
-              <h2>Machine Registered Successfully!</h2>
-              <br><br>
-            </center>
-            <p>
-            <label for=" m_name">Machine Name:</label>
+                    <?php if (mysqli_query($conn, $sql)) { ?>
+                    <center>
+                      <h2>Machine Registered Successfully!</h2>
+                      <br><br>
+                    </center>
+                        <p>
+                        <label for=" m_name">Machine Name:</label>
                         <input class="form-control" type="text" maxlength="25" name="m_name" id="m_name" readonly
                             placeholder="<?php echo " $m_name"; ?>">
                         </p>
@@ -80,19 +54,32 @@ $sql = "INSERT INTO add_machine VALUES ('$m_name', '$m_uid',
                                 rows="2" readonly placeholder="<?php echo " $m_desc"; ?>"></textarea>
                         </p>
                         <p>
-                            <label for="m_image">Machine Image:</label>
-                            <img src="<?php echo " $target_dir"; ?>" alt="Machine Image" width="100%" height="100%">
+                            <label for="m_image">Machine Image:</label> <br>
+                            <center> <img src="<?php echo " $target_dir"; ?>" alt="Machine Image" width="50%" height="50%"> </center>
                         </p>
-                        <?php
-endif; ?>
+                            <div class="mb-3">
+                                <label for="qr_code">Click on the QR Code to download</label>
+                                <br><br>
+                                <center>
+                                    <!-- class="btn btn-success" -->
+                                    <a  href="<?php echo $url ?>" download="QR Code" target="_blank">
+                                        <img src="<?php echo $url ?>" alt="QR Code" width="100%" height="100%">
+                                    </a>
+                                </center>
+                            </div>
+                        
+
+                        <?php }?>
+
                         <br>
                         <center>
-                            <button class="btn btn-primary" onclick="goBack()" name="upload">Back</button>
+                            <button class="btn btn-outline-primary" onclick="goBack()" style="font-size: 20px;" name="back">Back</button>
                             <button style="background-color: transparent; border: none;">
-                                <a class="btn btn-primary" href="add_machine.php" readonly>Add Another Machine</a>
+                                <a class="btn btn-outline-success" href="add_machine.php" style="font-size: 20px;" readonly>Add Another Machine</a>
                             </button>
                         </center>
                     </div>
+
                 </div>
             </div>
         </div>
